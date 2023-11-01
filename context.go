@@ -425,6 +425,8 @@ func (ctx *Context) doRequest(w http.ResponseWriter, r *http.Request) (bool, err
 			html = string(b)
 		} else if strings.Contains(r.URL.Path, "/douyin-system/api/buyin/card/unBindLicenses") {
 			html = `{"success":true,"message":"操作成功","code":200,"result":"操作成功","timestamp":1696228237381}`
+		} else if strings.Contains(r.URL.Path, "/douyin-system/api/buyin/card/updateStatus") {
+
 		}
 		err := ServeInMemory(w, 200, nil, []byte(html))
 		if err != nil && !isConnectionClosed(err) {
