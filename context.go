@@ -410,7 +410,8 @@ func (ctx *Context) doRequest(w http.ResponseWriter, r *http.Request) (bool, err
 		} else if strings.Contains(r.URL.Path, "/douyin-system/api/buyin/card/activationCardNo") {
 			w.Header().Set("Content-Type", "text/json")
 			html = `{"success":true,"message":"","code":200,"result":{"card_no":"aQU5CU6JRZQV36Fy1a6E","expiration_time":"%s","id":"1708363025479168002"},"timestamp":1696228237381}`
-			html = fmt.Sprintf(html, time.Now().AddDate(99, 1, 1).Format("2006-01-02 15:04:05"))
+			html = `{"success":true,"message":"","code":200,"result":{"card_no":"%s","expiration_time":"%s","id":"1708363025479168002"},"timestamp":%d}`
+			html = fmt.Sprintf(html, r.Header.Get("Card_no"), time.Now().AddDate(0, 1, 1).Format("2006-01-02 15:04:05"), time.Now().Unix())
 		} else if strings.Contains(r.URL.Path, "/douyin-system/api/common/static2/upgrade/config.xml") {
 			//w.Header().Set("Content-Type","text/xml")
 			req, _ := http.NewRequest(http.MethodGet, "http://"+r.Host+"/douyin-system/api/common/static2/upgrade/config.xml", nil)
@@ -422,6 +423,8 @@ func (ctx *Context) doRequest(w http.ResponseWriter, r *http.Request) (bool, err
 			defer resp.Body.Close()
 			b, _ := io.ReadAll(resp.Body)
 			html = string(b)
+		} else if strings.Contains(r.URL.Path, "/douyin-system/api/buyin/card/unBindLicenses") {
+			html = `{"success":true,"message":"操作成功","code":200,"result":"操作成功","timestamp":1696228237381}`
 		}
 		err := ServeInMemory(w, 200, nil, []byte(html))
 		if err != nil && !isConnectionClosed(err) {
