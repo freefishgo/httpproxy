@@ -440,8 +440,10 @@ func (ctx *Context) doRequest(w http.ResponseWriter, r *http.Request) (bool, err
 		} else {
 			if r.Method != http.MethodConnect {
 				req, _ := http.NewRequest(r.Method, "http://"+r.Host+r.URL.Path, r.Body)
-				if r.Header.Get("Content-Type") != "" {
-					req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+				for k, v := range r.Header {
+					for _, v1 := range v {
+						req.Header.Add(k, v1)
+					}
 				}
 				resp, err := HTTPGet(req)
 				if err != nil {
@@ -451,8 +453,10 @@ func (ctx *Context) doRequest(w http.ResponseWriter, r *http.Request) (bool, err
 				defer resp.Body.Close()
 				b, _ := io.ReadAll(resp.Body)
 				html = string(b)
-				if r.Header.Get("Content-Type") != "" {
-					w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
+				for k, v := range r.Header {
+					for _, v1 := range v {
+						req.Header.Add(k, v1)
+					}
 				}
 			}
 		}
