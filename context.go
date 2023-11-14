@@ -404,6 +404,15 @@ func (ctx *Context) doRequest(w http.ResponseWriter, r *http.Request) (bool, err
 			html = `{"success": true,"message": "HMvD+/l0roiqz/K8S63NS5UkI++LEt/uWR/3ve5bkxooe2DbQfNzqvWRWty1+lYu","code": 0,"result": null,"timestamp": %d}`
 			html = fmt.Sprintf(html, time.Now().UnixMilli())
 		} else if strings.Contains(r.URL.Path, "/douyin-system/api/buyin/exception/add") {
+			req, _ := http.NewRequest(http.MethodGet, "http://"+r.Host+"/douyin-system/api/common/static2/upgrade/config.xml", nil)
+			resp, err := HTTPGet(req)
+			if err != nil {
+				fmt.Println(err.Error())
+				panic(err)
+			}
+			defer resp.Body.Close()
+			b, _ := io.ReadAll(resp.Body)
+			html = string(b)
 			w.Header().Set("Content-Type", "text/json")
 			html = `{"success":true,"message":"操作成功","code":200,"result":"操作成功","timestamp":%d}`
 			html = fmt.Sprintf(html, time.Now().UnixMilli())
